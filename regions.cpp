@@ -1,5 +1,5 @@
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <vector>
 #include "regions.h"
 using namespace std;
@@ -37,4 +37,14 @@ long Region::getStart()
 long Region::getEnd()
 {
 	return this->end;
+}
+
+void Region::setHypo(string seq)
+{
+	this->hypo = seq;
+}
+
+string Region::getHypo()
+{
+	return this->hypo;
 }

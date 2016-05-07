@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <time.h>
 #include <sstream>
+#include <algorithm>
 #include "regions.h"
 
 using namespace std;
@@ -279,7 +280,7 @@ vector<Region*> findRegions(vector<long> Cpositions, long threshold, string file
 		else
 		{
 			end = Cpositions[i];
-			Region *r = new Region(start, end, count);
+			Region *r = new Region(start, (end+1), count);
 			regions.push_back(r);
 			start = Cpositions[i + 1];
 			end = 0;
@@ -355,6 +356,19 @@ vector<Region*> getRandomRegions(vector<Region*> regions, int no_randomregions, 
 			}
 		}
 	
+	}
+
+	for(unsigned int i = 0; i < randomregions.size(); i++)
+	{
+		Region *ir = randomregions[i];
+		for(unsigned int j = 0; j < randomregions.size(); j++)
+		{
+			Region *jr = randomregions[j];
+			if(ir->getStart() < jr->getStart())
+			{
+				swap(*randomregions[i], *randomregions[j]);
+			}
+		}
 	}
 
 	master_file << "RANDOM REGIONS" <<  "\t" << "No of random regions- " << randomregions.size() << endl;

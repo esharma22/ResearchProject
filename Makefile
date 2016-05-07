@@ -6,11 +6,11 @@ CFLAGS=-c -Wall -std=c++11
 
 all: make_meth
 
-make_meth: main.o regions.o
-	$(CC) main.o regions.o -o make_meth
+make_meth: noise.o regions.o
+	$(CC) noise.o regions.o -o make_meth
 
-main.o : regions.h main.cpp
-	$(CC) $(CFLAGS) main.cpp
+noise.o : regions.h noise.cpp
+	$(CC) $(CFLAGS) noise.cpp
 
 regions.o: regions.h regions.cpp
 	$(CC) $(CFLAGS) regions.cpp

@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
 	for(long j = 0; j < (Cpositions.size() - 1); j++)	//Defining regions within a threshold of 1000
 	{
-		if((Cpositions[j+1] - Cpositions[j]) < upperbound)
+		if((Cpositions[j+1] - Cpositions[j]) >= upperbound)
 		{
 			if(first)
 			{
