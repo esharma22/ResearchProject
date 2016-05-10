@@ -487,6 +487,9 @@ void createMethTable(vector<long> Cpositions, vector<Region*> randomregions, str
 }
 
 
+/*
+	Getting RR for adding noise
+*/
 vector<long> getCytosine(vector<long> Cpositions, vector<Region*> randomregions, float percent)
 {
 	long totalCpG = 0;
@@ -523,6 +526,10 @@ vector<long> getCytosine(vector<long> Cpositions, vector<Region*> randomregions,
 	}
 	return CforNoise;
 }
+
+/*
+	Adding noise to RR
+*/
 
 void addNoise(vector<long> Cpositions, vector<Region*> randomregions, string filename, string chromosome_name, float percent)
 {
@@ -591,4 +598,3 @@ void addNoise(vector<long> Cpositions, vector<Region*> randomregions, string fil
 	methTable.close();
 	master_file.close();
 }
-

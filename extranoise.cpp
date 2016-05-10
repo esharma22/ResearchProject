@@ -25,6 +25,7 @@ bool readint(int &);
 vector<Region*> findRegions(vector<long>, long, string);
 vector<Region*> getRandomRegions(vector<Region*>, int, string);
 vector<long> getCytosine(vector<long>, vector<Region*>, float);
+vector<long> getCytosine_RR(vector<long> Cpositions, vector<Region*> randomregions, float percent);
 
 void addNoise(vector<long>, vector<Region*>, string, string, float);
 void createMethTable(vector<long>, vector<Region*>, string, string);
@@ -487,11 +488,14 @@ void createMethTable(vector<long> Cpositions, vector<Region*> randomregions, str
 }
 
 
+/*
+	Getting all regions except RR to add noise	
+*/
 vector<long> getCytosine(vector<long> Cpositions, vector<Region*> randomregions, float percent)
 {
 	long totalCpG = 0;
 	int noise;
-	vector<long> allrandomCs;
+	vector<long> allC_without_RR;
 	vector<long> CforNoise;
 
 	for(unsigned int i = 0; i < randomregions.size(); i++)
@@ -504,26 +508,71 @@ vector<long> getCytosine(vector<long> Cpositions, vector<Region*> randomregions,
 	for(unsigned long i = 0; i < Cpositions.size(); i++)
 	{
 		long c = Cpositions[i];
-		//bool random = false;
+		bool random = false;
 		for(unsigned int j = 0; j < randomregions.size(); j++)
 		{
 			Region *r = randomregions[j];
 			if(c >= r->getStart() && c <= r->getEnd())
 			{
-				//random = true;
-				allrandomCs.push_back(c);
+				random = true;
+				break;
 			}
+		}
+		if(!random)
+		{
+			allC_without_RR.push_back(c);
 		}
 	}
 	while(noise > 0)
 	{
-		int pos = rand() % allrandomCs.size();
-		CforNoise.push_back(allrandomCs[pos]);
+		int pos = rand() % allC_without_RR.size();
+		CforNoise.push_back(allC_without_RR[pos]);
 		noise--;
 	}
 	return CforNoise;
 }
 
+/*
+	Getting all regions except RR to add noise	
+*/
+vector<long> getCytosine_RR(vector<long> Cpositions, vector<Region*> randomregions, float percent)
+{
+	long totalCpG = 0;
+	int noise;
+	vector<long> allC_RR;
+	vector<long> CforNoise;
+
+	for(unsigned int i = 0; i < randomregions.size(); i++)
+	{
+		Region *r = randomregions[i];
+		totalCpG = totalCpG + r->no_of_sites();
+	}
+	noise = totalCpG * percent;
+	cout << "Noise- " << noise << endl;
+	for(unsigned long i = 0; i < Cpositions.size(); i++)
+	{
+		long c = Cpositions[i];
+		for(unsigned int j = 0; j < randomregions.size(); j++)
+		{
+			Region *r = randomregions[j];
+			if(c >= r->getStart() && c <= r->getEnd())
+			{
+				allC_RR.push_back(c);
+			}
+		}
+	}
+	while(noise > 0)
+	{
+		int pos = rand() % allC_RR.size();
+		CforNoise.push_back(allC_RR[pos]);
+		noise--;
+	}
+	return CforNoise;
+}
+
+/*
+	Function to add noise
+*/
 void addNoise(vector<long> Cpositions, vector<Region*> randomregions, string filename, string chromosome_name, float percent)
 {
 	ofstream methTable(filename);
@@ -531,9 +580,11 @@ void addNoise(vector<long> Cpositions, vector<Region*> randomregions, string fil
 	float random_meth[] = {0.0, 0.1, 0.2};
 	float regular_meth[] = {0.7, 0.8, 0.9, 1.0};
 	vector<long> CforNoise;
+	vector<long> CforNoise_RR;
 	vector<long>::iterator it;
 
 	CforNoise = getCytosine(Cpositions, randomregions, percent);
+	CforNoise_RR = getCytosine_RR(Cpositions, randomregions, percent);
 	master_file << "METHYLATION TABLE" << endl;
 	master_file << "--------------------------------------------------------" << endl;
 	for(unsigned long i = 0; i < Cpositions.size(); i++)
@@ -558,14 +609,14 @@ void addNoise(vector<long> Cpositions, vector<Region*> randomregions, string fil
 		}
 		if(random)
 		{
-			it = find(CforNoise.begin(), CforNoise.end(), c);
-			if(it != CforNoise.end())
+			it = find(CforNoise_RR.begin(), CforNoise_RR.end(), c);
+			if(it != CforNoise_RR.end())
 			{
 				methTable << "0.8";
 				master_file << "0.8";
 			}
 			else
-			{ 
+			{
 				int pos = rand() % 3;
 				if(pos == 0)
 				{
@@ -581,9 +632,18 @@ void addNoise(vector<long> Cpositions, vector<Region*> randomregions, string fil
 		}
 		else
 		{
-	 		int pos = rand() % 4;
-			methTable << regular_meth[pos];
-			master_file << regular_meth[pos];
+			it = find(CforNoise.begin(), CforNoise.end(), c);
+			if(it != CforNoise.end())
+			{
+				methTable << "0.0";
+				master_file << "0.0";
+			}
+			else
+			{
+	 			int pos = rand() % 4;
+				methTable << regular_meth[pos];
+				master_file << regular_meth[pos];
+			}
 		}
 		methTable << "\t+" << "\n";
 		master_file << "\t+" << "\n";

@@ -199,7 +199,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 			Region *hmr = hmr_regions[j];
 			if((hmr->getStart() == region->getStart()) && (hmr->getEnd() == region->getEnd()))
 			{
-				//overlap.push_back(hmr);
+				overlap.push_back(hmr);
 				i++;
 				j++;	
 			}
@@ -211,7 +211,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				{
 					//if(hmr->getEnd() < region->getEnd())
 					//{
-					//	//overlap.push_back(hmr);
+					overlap.push_back(hmr);
 					//}
 					//else
 					//{
@@ -223,11 +223,13 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				}
 				else if((tempRR->getStart() == tempHMR->getStart()) && (tempRR->getEnd() != tempHMR->getEnd()))
 				{
+					overlap.push_back(hmr);
 					i++;
 					j++;
 				}
 				else if((tempRR->getStart() != tempHMR->getStart()) && (tempRR->getEnd() == tempHMR->getEnd()))
 				{
+					overlap.push_back(hmr);
 					i++;
 					j++;
 				}
@@ -246,7 +248,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				{
 					//if(hmr->getEnd() < region->getEnd())
 					//{
-					//	//overlap.push_back(hmr);
+					overlap.push_back(hmr);
 					//}
 					//else
 					//{
@@ -258,11 +260,13 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				}
 				else if((tempRR->getStart() == tempHMR->getStart()) && (tempRR->getEnd() != tempHMR->getEnd()))
 				{
+					overlap.push_back(hmr);
 					i++;
 					j++;
 				}
 				else if((tempRR->getStart() != tempHMR->getStart()) && (tempRR->getEnd() == tempHMR->getEnd()))
 				{
+					overlap.push_back(hmr);
 					i++;
 					j++;
 				}
@@ -289,7 +293,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 			Region *hmr = hmr_regions[j];
 			if((region->getStart() == hmr->getStart()) && (region->getEnd() == hmr->getEnd()))
 			{
-				//overlap.push_back(hmr);
+				overlap.push_back(hmr);
 				i++;
 				j++;
 			}
@@ -301,7 +305,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				{
 					if(hmr->getEnd() < region->getEnd())
 					{
-						//overlap.push_back(hmr);
+						overlap.push_back(hmr);
 					}
 					else
 					{
@@ -314,7 +318,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				{
 					if(hmr->getEnd() < region->getEnd())
 					{
-						//overlap.push_back(hmr);
+						overlap.push_back(hmr);
 					}
 					i++;
 					j++;
@@ -345,7 +349,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 					while(j <= diff)
 					{
 						tempHMR = hmr_regions[j];
-						//overlap.push_back(tempHMR);
+						overlap.push_back(tempHMR);
 						j++;
 					}
 					i++;
@@ -360,7 +364,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				{
 					if(hmr->getEnd() < region->getEnd())
 					{
-						//overlap.push_back(hmr);
+						overlap.push_back(hmr);
 					}
 					else
 					{
@@ -373,14 +377,14 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 				{
 					if(hmr->getEnd() < region->getEnd())
 					{
-						//overlap.push_back(hmr);
+						overlap.push_back(hmr);
 					}
 					i++;
 					j++;
 				}
 				else if((tempRR->getStart() != tempHMR->getStart()) && (tempRR->getEnd() == tempHMR->getEnd()))
 				{
-					//overlap.push_back(hmr);
+					overlap.push_back(hmr);
 					i++;
 					j++;
 				}
@@ -404,7 +408,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 					while(j <= diff)
 					{
 						tempHMR = hmr_regions[j];
-						//overlap.push_back(tempHMR);
+						overlap.push_back(tempHMR);
 						j++;
 					}
 					i++;
@@ -420,7 +424,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 		}
 	}		
 
-	/*cout << "--------------------------------------------------------------------------------------" << endl;
+	cout << "--------------------------------------------------------------------------------------" << endl;
 	cout << "\n1- Generated HMRs that overalap with HMR regions-" << overlap.size() << endl;
 	cout << "--------------------------------------------------------------------------------------" << endl;
 	cout << "\n2- HMR regions that overlap with generated HMRs- " << overlap.size() << endl;
@@ -428,7 +432,7 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 	for(int i = 0; i < overlap.size(); i++)
 	{
 		cout << overlap[i]->getStart() << " " << overlap[i]->getEnd() << " " << overlap[i]->no_of_sites() << endl;
-	}*/
+	}
 	cout << "--------------------------------------------------------------------------------------" << endl;
 	cout << "\n3- Generated HMRs that do not overalp with HMR regions-" << missed.size() << endl;
 	cout << "--------------------------------------------------------------------------------------" << endl;
@@ -436,8 +440,8 @@ void compare_regions(vector<Region*> randomregions, vector<Region*> hmr_regions)
 	{
 		cout << missed[i]->getStart() << " " << missed[i]->getEnd() << " " << missed[i]->no_of_sites() << endl;
 	}
-	/*int missedHMR = 0;
+	int missedHMR = 0;
 	missedHMR = hmr_regions.size() - overlap.size();
 	cout << "--------------------------------------------------------------------------------------" << endl;
-	cout << "\n4- HMR regions that do not overlap with generated HMRs- " << abs(missedHMR) << endl;*/
+	cout << "\n4- HMR regions that do not overlap with generated HMRs- " << abs(missedHMR) << endl;
 }
